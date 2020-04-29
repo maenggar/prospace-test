@@ -11,13 +11,20 @@ const getCompanyQuery = gql`
   }
 `;
 function TestApollo(props) {
-  console.log(props);
+  const displayData = () => {
+    let data = props.data;
+    if (data.loading) {
+      return <h3>data stil loading</h3>;
+    } else {
+      return data.companies.map((companie) => {
+        return <li>{companie.name}</li>;
+      });
+    }
+  };
 
   return (
     <div>
-      <ul>
-        <li>test apollo</li>
-      </ul>
+      <ul>{displayData()}</ul>
     </div>
   );
 }
