@@ -1,4 +1,8 @@
 const express = require("express");
+const graphqlHttp = require("express-graphql");
+const schema = require("./schema");
+const mongoose = require("mongoose");
+require("dotenv/config");
 
 //initialitation
 const app = express();
@@ -13,9 +17,13 @@ app.use(
 );
 
 //connection database
-mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, () => {
-  console.log("connecting with database");
-});
+mongoose.connect(
+  process.env.DB_CONNECTION,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  () => {
+    console.log("connecting with database");
+  }
+);
 
 //port listening
 app.listen(5000, () => {
