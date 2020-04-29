@@ -2,10 +2,13 @@ const express = require("express");
 const graphqlHttp = require("express-graphql");
 const schema = require("./schema");
 const mongoose = require("mongoose");
+const cors = require("cors");
 require("dotenv/config");
 
 //initialitation
 const app = express();
+
+app.use(cors());
 
 // graphql endpoint
 app.use(
