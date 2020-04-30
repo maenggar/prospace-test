@@ -6,7 +6,10 @@ const getCompanyQuery = gql`
   {
     companies {
       name
-      id
+      address
+      revenue
+      PhoneCode
+      PhoneNumber
     }
   }
 `;
@@ -17,14 +20,24 @@ function TestApollo(props) {
       return <h3>data stil loading</h3>;
     } else {
       return data.companies.map((companie) => {
-        return <li>{companie.name}</li>;
+        return (
+          <div>
+            <h4>{companie.name}</h4>
+            <h4>{companie.address}</h4>
+            <h4>{companie.revenue}</h4>
+            <div style={{ display: "flex" }}>
+              <h4>`(+{companie.PhoneCode})`</h4>
+              <h4>{companie.PhoneNumber}</h4>
+            </div>
+          </div>
+        );
       });
     }
   };
 
   return (
-    <div>
-      <ul>{displayData()}</ul>
+    <div style={{ display: "flex", justifyContent: "space-around" }}>
+      {displayData()}
     </div>
   );
 }
