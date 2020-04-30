@@ -1,18 +1,7 @@
 import React from "react";
-import { gql } from "apollo-boost";
 import { graphql } from "react-apollo";
+import { getCompanyQuery } from "../queries/Queries";
 
-const getCompanyQuery = gql`
-  {
-    companies {
-      name
-      address
-      revenue
-      PhoneCode
-      PhoneNumber
-    }
-  }
-`;
 function TestApollo(props) {
   const displayData = () => {
     let data = props.data;
