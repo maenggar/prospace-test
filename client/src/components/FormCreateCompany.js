@@ -1,10 +1,34 @@
 import React from "react";
 import { withFormik, Form, Field } from "formik";
 import * as Yup from "yup";
+import {
+  TextField,
+  Grid,
+  makeStyles,
+  createMuiTheme,
+  Button,
+  Typography,
+} from "@material-ui/core";
 import { graphql } from "react-apollo";
 import { addCompany } from "../queries/Queries";
 
+let theme = createMuiTheme();
+
+const useStyle = makeStyles({
+  root: {
+    lineHeight: theme.spacing(0.6),
+  },
+  heading: {
+    marginBottom: theme.spacing(1),
+  },
+  phoneField: {
+    lineHeight: theme.spacing(0.3),
+    marginTop: theme.spacing(-1),
+  },
+});
+
 function FormCreateCompany(props) {
+  const classes = useStyle();
   const addCompanyMutation = () => {
     return props.mutate({
       variables: {
@@ -18,59 +42,123 @@ function FormCreateCompany(props) {
   };
 
   return (
-    <div>
-      <Form style={{ display: "flex", flexDirection: "column", padding: 30 }}>
-        <div>
+    <Grid container className={classes.root}>
+      <Grid item>
+        <Typography className={classes.heading} variant="h5">
+          Create Company
+        </Typography>
+      </Grid>
+      <Form>
+        <Grid item>
           {props.touched.name && props.errors.name && (
             <p>{props.errors.name}</p>
           )}
-          <Field type="text" name="name" placeholder="Company Name" />
-        </div>
-        <div>
+          <Field type="text" name="name" placeholder="Company Name">
+            {({ field }) => (
+              <TextField
+                fullWidth
+                id="company-name"
+                label="Company Name"
+                variant="outlined"
+                value={props.values.name}
+                {...field}
+              />
+            )}
+          </Field>
+        </Grid>
+        <Grid item>
           {props.touched.address && props.errors.address && (
             <p>{props.errors.address}</p>
           )}
-          <Field type="text" name="address" placeholder="Company Address" />
-        </div>
-        <div>
+          <Field type="text" name="address" placeholder="Company Address">
+            {({ field }) => (
+              <TextField
+                fullWidth
+                id="company-address"
+                label="Company Address"
+                variant="outlined"
+                value={props.values.address}
+                {...field}
+              />
+            )}
+          </Field>
+        </Grid>
+        <Grid item>
           {props.touched.revenue && props.errors.revenue && (
             <p>{props.errors.revenue}</p>
           )}
-          <Field type="text" name="revenue" placeholder="Company Revenue" />
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-          }}
-        >
-          <label for="">Phone Company</label>
-          <div>
-            <div>
-              {props.touched.PhoneCode && props.errors.PhoneCode && (
-                <p>{props.errors.PhoneCode}</p>
-              )}
-              <Field type="text" name="PhoneCode" placeholder="Phone Code" />
-            </div>
-            <div>
-              {props.touched.PhoneNumber && props.errors.PhoneNumber && (
-                <p>{props.errors.PhoneNumber}</p>
-              )}
-              <Field
-                type="text"
-                name="PhoneNumber"
-                placeholder="Phone Number"
+          <Field type="text" name="revenue" placeholder="Company Revenue">
+            {({ field }) => (
+              <TextField
+                fullWidth
+                id="company-revenue"
+                label="Company Revenue"
+                variant="outlined"
+                value={props.values.revenue}
+                {...field}
               />
-            </div>
-          </div>
-        </div>
-        <button type="submit" onClick={addCompanyMutation}>
+            )}
+          </Field>
+        </Grid>
+        {/* Phone Field */}
+        <Grid className={classes.phoneField} container>
+          <Grid item>
+            <Typography variant="caption">PhoneNumber</Typography>
+          </Grid>
+
+          <Grid item>
+            <Grid container direction="row" justify="space-between">
+              <Grid item xs={3}>
+                {props.touched.PhoneCode && props.errors.PhoneCode && (
+                  <p>{props.errors.PhoneCode}</p>
+                )}
+                <Field type="text" name="PhoneCode" placeholder="Code">
+                  {({ field }) => (
+                    <TextField
+                      fullWidth
+                      id="phone-code"
+                      label="Code"
+                      variant="outlined"
+                      value={props.values.PhoneCode}
+                      {...field}
+                    />
+                  )}
+                </Field>
+              </Grid>
+              <Grid item xs={8}>
+                {props.touched.PhoneNumber && props.errors.PhoneNumber && (
+                  <p>{props.errors.PhoneNumber}</p>
+                )}
+                <Field
+                  type="text"
+                  name="PhoneNumber"
+                  placeholder="Phone Number"
+                >
+                  {({ field }) => (
+                    <TextField
+                      fullWidth
+                      id="phone-number"
+                      label="Phone Number"
+                      variant="outlined"
+                      value={props.values.PhoneNumber}
+                      {...field}
+                    />
+                  )}
+                </Field>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={addCompanyMutation}
+          fullWidth
+        >
           create
-        </button>
+        </Button>
       </Form>
-    </div>
+    </Grid>
   );
 }
 
