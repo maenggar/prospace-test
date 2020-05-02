@@ -27,9 +27,12 @@ const useStyle = makeStyles({
   list: {
     marginTop: "0.2em",
   },
+  cardContent: {
+    lineHeight: "0.2",
+  },
 });
 
-function TestApollo(props) {
+function CompaniesList(props) {
   const classes = useStyle();
   const displayData = () => {
     let data = props.data;
@@ -52,12 +55,39 @@ function TestApollo(props) {
                 />
                 <Divider variant="middle" />
                 <CardContent>
-                  <h4>{companie.address}</h4>
-                  <h4>{companie.revenue}</h4>
-                  <div style={{ display: "flex" }}>
-                    <h4>`(+{companie.PhoneCode})`</h4>
-                    <h4>{companie.PhoneNumber}</h4>
-                  </div>
+                  <Grid
+                    container
+                    className={classes.cardContent}
+                    direction="column"
+                    justify="flex-start"
+                  >
+                    <Grid item>
+                      <Typography align="left">Address :</Typography>
+                      <Typography variant="subtitle2" align="left">
+                        {companie.address}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography align="left">Revenue :</Typography>
+                      <Typography variant="subtitle2" align="left">
+                        {companie.revenue}
+                      </Typography>
+                    </Grid>
+
+                    <Typography align="left">Phone No:</Typography>
+                    <Grid container>
+                      <Grid item>
+                        <Typography variant="subtitle2">
+                          (+{companie.PhoneCode})
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="subtitle2">
+                          {companie.PhoneNumber}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </CardContent>
               </Card>
             </Grid>
@@ -95,4 +125,4 @@ function TestApollo(props) {
     </div>
   );
 }
-export default graphql(getCompanyQuery)(TestApollo);
+export default graphql(getCompanyQuery)(CompaniesList);

@@ -10,7 +10,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
-import TestApollo from "../components/TestApollo";
+import OfficesList from "../components/OfficesList";
 
 const theme = createMuiTheme();
 const useStyle = makeStyles({
@@ -116,7 +116,7 @@ function OfficePage() {
           <Divider className={classes.horisontalDivider} variant="fullWidth" />
           <Grid container direction="column">
             <Grid item xs="auto" sm="auto" md="auto">
-              <TestApollo />
+              {<OfficesList />}
             </Grid>
           </Grid>
         </Paper>

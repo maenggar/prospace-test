@@ -12,9 +12,17 @@ const getCompanyQuery = gql`
   }
 `;
 
-const testConnect = () => {
-  console.log("component is connecting");
-};
+const getOfficeQuery = gql`
+  {
+    offices {
+      id
+      name
+      latitude
+      longtitude
+      startDate
+    }
+  }
+`;
 
 const addCompany = gql`
   mutation(
@@ -40,4 +48,4 @@ const addCompany = gql`
   }
 `;
 
-export { getCompanyQuery, addCompany, testConnect };
+export { getCompanyQuery, getOfficeQuery, addCompany };

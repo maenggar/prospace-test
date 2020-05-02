@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import FormCompany from "../components/FormCreateCompany";
 import FormOffice from "../components/FormCreateOffice";
-import TestApollo from "../components/TestApollo";
+import CompaniesList from "../components/CompaniesList";
 
 const theme = createMuiTheme();
 const useStyle = makeStyles({
@@ -43,7 +43,7 @@ function OverViewPage() {
           <Divider className={classes.horisontalDivider} variant="middle" />
           <Grid container direction="column">
             <Grid item xs="auto" sm="auto" md="auto">
-              <TestApollo />
+              <CompaniesList />
             </Grid>
           </Grid>
         </Paper>
