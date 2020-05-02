@@ -2,7 +2,9 @@ import React from "react";
 import "./App.css";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import OverViewPage from "./pages/OverViewPage";
+import OfficePage from "./pages/OfficePage";
 
 const client = new ApolloClient({
   uri: "http://127.0.0.1:5000/prospace",
@@ -12,7 +14,12 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <div className="App">
-        <OverViewPage />
+        <Router>
+          <Switch>
+            <Route exact path="/" component={OverViewPage} />
+            <Route path="/officepage" component={OfficePage}></Route>
+          </Switch>
+        </Router>
       </div>
     </ApolloProvider>
   );
