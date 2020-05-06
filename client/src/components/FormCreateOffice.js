@@ -13,6 +13,7 @@ import {
   FormControl,
   InputLabel,
 } from "@material-ui/core";
+import DatePicker from "./DatePicker";
 
 let theme = createMuiTheme();
 const useStyle = makeStyles({
@@ -120,16 +121,7 @@ function FormCreateOffice(props) {
 
         <Grid item className={classes.startDate}>
           <Field type="text" name="date" placeholder="Company Start Date">
-            {({ field }) => (
-              <TextField
-                fullWidth
-                id="start-date"
-                label="Start Date"
-                variant="outlined"
-                value={props.values.date}
-                {...field}
-              />
-            )}
+            {({ field }) => <DatePicker />}
           </Field>
         </Grid>
 

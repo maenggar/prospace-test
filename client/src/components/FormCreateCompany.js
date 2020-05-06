@@ -9,8 +9,10 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
+
 import { graphql } from "react-apollo";
 import { addCompany } from "../queries/Queries";
+import CountryCode from "./CountryCode";
 
 let theme = createMuiTheme();
 
@@ -112,13 +114,11 @@ function FormCreateCompany(props) {
                 {props.touched.PhoneCode && props.errors.PhoneCode && (
                   <p>{props.errors.PhoneCode}</p>
                 )}
-                <Field type="text" name="PhoneCode" placeholder="Code">
+                <Field type="text" name="PhoneCode" placeholder="PhoneCode">
                   {({ field }) => (
-                    <TextField
-                      fullWidth
+                    <CountryCode
                       id="phone-code"
-                      label="Code"
-                      variant="outlined"
+                      label="Phone Code"
                       value={props.values.PhoneCode}
                       {...field}
                     />
@@ -168,8 +168,8 @@ const FormCompany = withFormik({
       name: name || "",
       address: address || "",
       revenue: revenue || "",
-      PhoneNumber: PhoneNumber || "",
-      PhoneCode: PhoneCode || "",
+      PhoneNumber: PhoneNumber || 0,
+      PhoneCode: PhoneCode || 0,
     };
   },
   validationSchema: Yup.object().shape({
