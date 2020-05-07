@@ -17,7 +17,8 @@ function App() {
         <Router>
           <Switch>
             <Route exact path="/" component={OverViewPage} />
-            <Route path="/officepage" component={OfficePage}></Route>
+            <Route exact path="/officepage" component={OfficePage} />
+            <Route exact path="/officepage/:id" component={OfficePage} />
           </Switch>
         </Router>
       </div>

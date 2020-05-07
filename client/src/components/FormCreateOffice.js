@@ -1,19 +1,24 @@
 import React from "react";
 import { withFormik, Form, Field } from "formik";
-import Yup from "yup";
+import * as Yup from "yup";
 import {
   TextField,
   Grid,
   Button,
-  MenuItem,
   Select,
   Typography,
   makeStyles,
   createMuiTheme,
   FormControl,
   InputLabel,
+  MenuItem,
 } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import DatePicker from "./DatePicker";
+
+import { graphql } from "react-apollo";
+import { getListCompany } from "../queries/Queries";
+//import CompaniesItem from "./CompaniesItem";
 
 let theme = createMuiTheme();
 const useStyle = makeStyles({
@@ -40,22 +45,28 @@ const useStyle = makeStyles({
 
 function FormCreateOffice(props) {
   const classes = useStyle();
-  const [age, setAge] = React.useState("");
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
-  const addCompanyMutation = () => {
+  const addOfficeMutation = () => {
     return props.mutate({
       variables: {
         name: props.values.name,
-        address: props.values.address,
-        revenue: props.values.revenue,
-        PhoneCode: parseInt(props.values.PhoneCode),
-        PhoneNumber: parseInt(props.values.PhoneNumber),
+        latitude: props.values.latitude,
+        longtitude: props.values.longtitude,
+        startDate: props.values.startDate,
+        companyId: props.values.companyId,
       },
     });
+  };
+
+  const CompaniesItem = () => {
+    let data = props.data;
+    if (data.loading) {
+      return <MenuItem>data stil loading</MenuItem>;
+    } else {
+      return data.companies.map((companie) => {
+        return <MenuItem>{companie.name}</MenuItem>;
+      });
+    }
   };
 
   return (
@@ -67,6 +78,9 @@ function FormCreateOffice(props) {
           </Typography>
         </Grid>
         <Grid item>
+          {props.touched.name && props.errors.name && (
+            <Alert severity="error">Please fill the office name</Alert>
+          )}
           <Field type="text" name="name" placeholder="Office Name">
             {({ field }) => (
               <TextField
@@ -88,6 +102,9 @@ function FormCreateOffice(props) {
           <Grid item>
             <Grid container justify="space-between">
               <Grid item xs={6}>
+                {props.touched.latitude && props.errors.latitude && (
+                  <Alert severity="error">Cannot be null</Alert>
+                )}
                 <Field type="text" name="latitude" placeholder="latitude">
                   {({ field }) => (
                     <TextField
@@ -102,6 +119,9 @@ function FormCreateOffice(props) {
                 </Field>
               </Grid>
               <Grid item xs={5}>
+                {props.touched.longtitude && props.errors.longtitude && (
+                  <Alert severity="error">Cannot be null</Alert>
+                )}
                 <Field type="text" name="longtitude" placeholder="longtitude">
                   {({ field }) => (
                     <TextField
@@ -120,27 +140,27 @@ function FormCreateOffice(props) {
         </Grid>
 
         <Grid item className={classes.startDate}>
+          {props.touched.startDate && props.errors.startDate && (
+            <Alert severity="error">Please fill the start date</Alert>
+          )}
           <Field type="text" name="date" placeholder="Company Start Date">
-            {({ field }) => <DatePicker />}
+            {({ field }) => <DatePicker {...field} />}
           </Field>
         </Grid>
 
         <Grid item className={classes.companylist}>
+          {props.touched.idCompany && props.errors.idCompany && (
+            <Alert severity="error">Please select the company</Alert>
+          )}
           <FormControl variant="outlined" label="List" fullWidth>
             <InputLabel id="company-list">Company List</InputLabel>
             <Select
               labelId="company-list-label"
               id="simple-select-outlined"
-              value={age}
-              onChange={handleChange}
+              value={props.idCompany}
               label="Company List"
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              <CompaniesItem />
             </Select>
           </FormControl>
         </Grid>
@@ -148,7 +168,7 @@ function FormCreateOffice(props) {
           className={classes.createButton}
           variant="contained"
           color="primary"
-          onClick={addCompanyMutation}
+          onClick={addOfficeMutation}
           fullWidth
         >
           create
@@ -159,17 +179,24 @@ function FormCreateOffice(props) {
 }
 
 const FormOffice = withFormik({
-  mapPropsToValues({ name, address, revenue, phoneCode, phoneNumber }) {
+  mapPropsToValues({ name, latitude, longtitude, startDate, companyId }) {
     return {
       name: name || "",
-      address: address || "",
-      revenue: revenue || "",
-      phoneNumber: phoneNumber || "",
-      phoneCode: phoneCode || "",
+      latitude: latitude || "",
+      longtitude: longtitude || "",
+      startDate: startDate || "",
+      companyId: companyId || "",
     };
   },
+  validationSchema: Yup.object().shape({
+    name: Yup.string().required(),
+    latitude: Yup.string().required(),
+    longtitude: Yup.string().required(),
+    startDate: Yup.string().required(),
+    companyId: Yup.string().required(),
+  }),
   handleSubmit(values) {
     console.log(values);
   },
 })(FormCreateOffice);
-export default FormOffice;
+export default graphql(getListCompany)(FormOffice);

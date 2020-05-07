@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Card,
@@ -9,7 +9,9 @@ import {
   makeStyles,
   GridList,
   Typography,
+  Link,
 } from "@material-ui/core";
+import { Link as RouterLink } from "react-router-dom";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { graphql } from "react-apollo";
 import { getCompanyQuery } from "../queries/Queries";
@@ -33,6 +35,12 @@ const useStyle = makeStyles({
 });
 
 function CompaniesList(props) {
+  // handel card hover
+  let [raisedCard, setRaisedCard] = useState(false);
+  const handleRaised = () => {
+    setRaisedCard(!raisedCard);
+  };
+
   const classes = useStyle();
   const displayData = () => {
     let data = props.data;
@@ -41,55 +49,75 @@ function CompaniesList(props) {
     } else {
       return data.companies.map((companie) => {
         return (
-          <div>
+          <div key={companie.id}>
             <Grid item xs="auto" style={{ maxWidth: "15em", marginTop: "5em" }}>
-              <Card variant="elevation" className={classes.cardStyle}>
-                <CardHeader
-                  titleTypographyProps={{ variant: "h6", align: "left" }}
-                  title={companie.name}
-                  action={
-                    <IconButton aria-label="settings">
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  }
-                />
-                <Divider variant="middle" />
-                <CardContent>
-                  <Grid
-                    container
-                    className={classes.cardContent}
-                    direction="column"
-                    justify="flex-start"
-                  >
-                    <Grid item>
-                      <Typography align="left">Address :</Typography>
-                      <Typography variant="subtitle2" align="left">
-                        {companie.address}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography align="left">Revenue :</Typography>
-                      <Typography variant="subtitle2" align="left">
-                        {companie.revenue}
-                      </Typography>
-                    </Grid>
+              <Link
+                underline="none"
+                component={RouterLink}
+                to={`/officepage/${companie.id}`}
+              >
+                <Card
+                  onMouseOver={() => {
+                    handleRaised();
+                  }}
+                  onMouseOut={() => {
+                    handleRaised();
+                  }}
+                  onClick={() => {
+                    console.log(companie.id, "the id number");
+                  }}
+                  raised={raisedCard}
+                  variant="elevation"
+                  className={classes.cardStyle}
+                  key={companie.id}
+                >
+                  <CardHeader
+                    titleTypographyProps={{ variant: "h6", align: "left" }}
+                    title={companie.name}
+                    action={
+                      <IconButton aria-label="settings">
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    }
+                  />
+                  <Divider variant="middle" />
+                  <CardContent>
+                    <Grid
+                      container
+                      className={classes.cardContent}
+                      direction="column"
+                      justify="flex-start"
+                    >
+                      <Grid item>
+                        <Typography align="left">Address :</Typography>
+                        <Typography variant="subtitle2" align="left">
+                          {companie.address}
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography align="left">Revenue :</Typography>
+                        <Typography variant="subtitle2" align="left">
+                          {companie.revenue}
+                        </Typography>
+                      </Grid>
 
-                    <Typography align="left">Phone No:</Typography>
-                    <Grid container>
-                      <Grid item>
-                        <Typography variant="subtitle2">
-                          (+{companie.PhoneCode})
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="subtitle2">
-                          {companie.PhoneNumber}
-                        </Typography>
+                      <Typography align="left">Phone No:</Typography>
+                      <Grid container>
+                        <Grid item>
+                          <Typography variant="subtitle2">
+                            (+{companie.PhoneCode})
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="subtitle2">
+                            {companie.PhoneNumber}
+                          </Typography>
+                        </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Link>
             </Grid>
           </div>
         );

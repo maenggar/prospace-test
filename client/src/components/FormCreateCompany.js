@@ -9,6 +9,7 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 
 import { graphql } from "react-apollo";
 import { addCompany } from "../queries/Queries";
@@ -53,7 +54,7 @@ function FormCreateCompany(props) {
       <Form>
         <Grid item>
           {props.touched.name && props.errors.name && (
-            <p>{props.errors.name}</p>
+            <Alert severity="error">Please fill the company name</Alert>
           )}
           <Field type="text" name="name" placeholder="Company Name">
             {({ field }) => (
@@ -70,7 +71,7 @@ function FormCreateCompany(props) {
         </Grid>
         <Grid item>
           {props.touched.address && props.errors.address && (
-            <p>{props.errors.address}</p>
+            <Alert severity="error">Please fill the company address</Alert>
           )}
           <Field type="text" name="address" placeholder="Company Address">
             {({ field }) => (
@@ -87,7 +88,7 @@ function FormCreateCompany(props) {
         </Grid>
         <Grid item>
           {props.touched.revenue && props.errors.revenue && (
-            <p>{props.errors.revenue}</p>
+            <Alert severity="error">Please fill the company revenue</Alert>
           )}
           <Field type="text" name="revenue" placeholder="Company Revenue">
             {({ field }) => (
@@ -112,7 +113,7 @@ function FormCreateCompany(props) {
             <Grid container direction="row" justify="space-between">
               <Grid item xs={3}>
                 {props.touched.PhoneCode && props.errors.PhoneCode && (
-                  <p>{props.errors.PhoneCode}</p>
+                  <Alert severity="error"> Cannot be null</Alert>
                 )}
                 <Field type="text" name="PhoneCode" placeholder="PhoneCode">
                   {({ field }) => (
@@ -127,7 +128,7 @@ function FormCreateCompany(props) {
               </Grid>
               <Grid item xs={8}>
                 {props.touched.PhoneNumber && props.errors.PhoneNumber && (
-                  <p>{props.errors.PhoneNumber}</p>
+                  <Alert severity="error">Cannot be null</Alert>
                 )}
                 <Field
                   type="text"
@@ -138,7 +139,7 @@ function FormCreateCompany(props) {
                     <TextField
                       fullWidth
                       id="phone-number"
-                      label="Phone Number"
+                      label="xxx-xxx-xxx"
                       variant="outlined"
                       value={props.values.PhoneNumber}
                       {...field}
@@ -168,7 +169,7 @@ const FormCompany = withFormik({
       name: name || "",
       address: address || "",
       revenue: revenue || "",
-      PhoneNumber: PhoneNumber || 0,
+      PhoneNumber: PhoneNumber || "",
       PhoneCode: PhoneCode || 0,
     };
   },
