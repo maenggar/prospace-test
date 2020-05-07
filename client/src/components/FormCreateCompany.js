@@ -169,7 +169,7 @@ const FormCompany = withFormik({
       name: name || "",
       address: address || "",
       revenue: revenue || "",
-      PhoneNumber: PhoneNumber || "",
+      PhoneNumber: PhoneNumber || 0,
       PhoneCode: PhoneCode || 0,
     };
   },

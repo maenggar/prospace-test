@@ -123,6 +123,26 @@ const Mutation = new GraphQLObjectType({
         return office.save();
       },
     },
+    deleteCompany: {
+      type: CompanyType,
+      args: {
+        companyId: { type: GraphQLID },
+      },
+      resolve(data, args) {
+        const deleteCompany = Company.findByIdAndRemove(args.companyId);
+        return deleteCompany.exec();
+      },
+    },
+    deleteOffice: {
+      type: CompanyType,
+      args: {
+        officeId: { type: GraphQLID },
+      },
+      resolve(data, args) {
+        const deleteOffice = Company.findByIdAndRemove(args.officeId);
+        return deleteOffice.exec();
+      },
+    },
   },
 });
 
