@@ -22,6 +22,7 @@ const getSingleCompanyQuery = gql`
         PhoneCode
         PhoneNumber
         Office{
+          id
           name
           latitude
           longtitude
@@ -79,13 +80,14 @@ const addCompany = gql`
 
 const addOffice = gql`
   mutation(
+    $companyId: ID
     $name: String,
     $latitude: Float,
     $longtitude: Float,
-    $startDate: Int,
-    $companyId: ID
+    $startDate: String,
   ) {
-    addCompany(
+    addOffice(
+      companyId: $companyId,
       name: $name,
       latitude: $latitude,
       longtitude: $longtitude,
@@ -95,7 +97,7 @@ const addOffice = gql`
       latitude
       longtitude
       startDate
-      companyId
+      id
     }
   }
 `;
@@ -109,7 +111,7 @@ const deleteCompany = gql`
 `;
 const deleteOffice = gql`
   mutation($officeId: ID) {
-    deleteCompany(officeId: $officeId) {
+    deleteOffice(officeId: $officeId) {
       name
       id
     }

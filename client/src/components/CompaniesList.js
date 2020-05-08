@@ -44,8 +44,6 @@ function CompaniesList(props) {
   };
   const classes = useStyle();
   const displayData = () => {
-    console.log(props, "find mutate props");
-
     let deleteCompanyMutation = (id) => {
       return props.deleteCompany({
         variables: {

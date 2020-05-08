@@ -11,6 +11,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import { graphql } from "react-apollo";
+import { deleteOffice } from "../queries/Queries";
 
 const useStyle = makeStyles({
   cardStyle: {
@@ -30,10 +32,23 @@ const useStyle = makeStyles({
   },
 });
 
-function OfficesList(props) {
+const OfficesList = (props) => {
   const classes = useStyle();
 
+  let deleteOfficeMutation = (id) => {
+    console.log(props, "deleteMutation Running");
+    console.log(id, "looking the id");
+
+    return props.mutate({
+      variables: {
+        officeId: id,
+      },
+    });
+  };
+
   const data = props.officeData;
+  console.log(props, "from Office list");
+
   const displayData = data.map((office) => (
     <div>
       <Grid item xs="auto" style={{ maxWidth: "15em", marginTop: "5em" }}>
@@ -46,7 +61,12 @@ function OfficesList(props) {
             titleTypographyProps={{ variant: "h6", align: "left" }}
             title={office.name}
             action={
-              <IconButton aria-label="settings">
+              <IconButton
+                aria-label="settings"
+                onClick={() => {
+                  deleteOfficeMutation(office.id);
+                }}
+              >
                 <DeleteForeverIcon />
               </IconButton>
             }
@@ -108,5 +128,5 @@ function OfficesList(props) {
       </Grid>
     </div>
   );
-}
-export default OfficesList;
+};
+export default graphql(deleteOffice)(OfficesList);

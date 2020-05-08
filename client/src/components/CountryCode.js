@@ -3,6 +3,8 @@ import MuiPhoneNumber from "material-ui-phone-number";
 import { Box, InputAdornment } from "@material-ui/core";
 
 function CountryCode(props) {
+  console.log(props, "from country code");
+
   return (
     <Fragment>
       <InputAdornment variant="outlined" position="end">

@@ -139,7 +139,7 @@ const Mutation = new GraphQLObjectType({
         officeId: { type: GraphQLID },
       },
       resolve(data, args) {
-        const deleteOffice = Company.findByIdAndRemove(args.officeId);
+        const deleteOffice = Office.findByIdAndRemove(args.officeId);
         return deleteOffice.exec();
       },
     },

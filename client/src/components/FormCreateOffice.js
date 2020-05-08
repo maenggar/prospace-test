@@ -17,7 +17,10 @@ import Alert from "@material-ui/lab/Alert";
 import DatePicker from "./DatePicker";
 
 import { graphql } from "react-apollo";
-import { getListCompany } from "../queries/Queries";
+import { flowRight as compose } from "lodash";
+import { addOffice, getListCompany } from "../queries/Queries";
+
+//import CompaniesItem from "./CompaniesItem";
 
 let theme = createMuiTheme();
 const useStyle = makeStyles({
@@ -45,29 +48,61 @@ const useStyle = makeStyles({
 function FormCreateOffice(props) {
   const classes = useStyle();
 
+  console.log(props.values.companyId, "looking the props");
+
   const addOfficeMutation = () => {
-    return props.mutate({
+    return props.addOffice({
       variables: {
-        name: props.values.name,
-        latitude: props.values.latitude,
-        longtitude: props.values.longtitude,
-        startDate: props.values.startDate,
         companyId: props.values.companyId,
+        name: props.values.name,
+        latitude: parseFloat(props.values.latitude),
+        longtitude: parseFloat(props.values.longtitude),
+        startDate: props.values.startDate,
       },
     });
   };
 
-  const CompaniesItem = () => {
-    let data = props.data;
-    if (data.loading) {
-      return <MenuItem>data stil loading</MenuItem>;
-    } else {
-      return data.companies.map((companie) => {
-        return <MenuItem>{companie.name}</MenuItem>;
-      });
-    }
+  const [company, setCompany] = React.useState({ value: "" });
+
+  const handleChange = (event) => {
+    setCompany(event.target.value);
   };
 
+  const handleNumber = (dateNumber) => {
+    props.values.startDate = dateNumber;
+  };
+  const sendListCompany = (id) => {
+    props.values.companyId = id;
+  };
+
+  const CompaniesItem = React.forwardRef((props, ref) => {
+    let data = props.companylist;
+
+    console.log(props, "companie item");
+    if (data.loading) {
+      return (
+        <div {...props} ref={ref}>
+          <MenuItem>data stil loading</MenuItem>
+        </div>
+      );
+    } else {
+      return data.companies.map((companie) => {
+        return (
+          <div {...props} ref={ref} key={companie.id}>
+            <MenuItem
+              value={companie.id}
+              key={companie.id}
+              onClick={() => {
+                props.companydata(companie.id);
+              }}
+            >
+              {companie.name}
+            </MenuItem>
+          </div>
+        );
+      });
+    }
+  });
   return (
     <Grid container className={classes.root}>
       <Form>
@@ -143,23 +178,35 @@ function FormCreateOffice(props) {
             <Alert severity="error">Please fill the start date</Alert>
           )}
           <Field type="text" name="date" placeholder="Company Start Date">
-            {({ field }) => <DatePicker {...field} />}
+            {({ field }) => (
+              <DatePicker
+                handleDateNumber={handleNumber}
+                value={handleNumber}
+                {...field}
+              />
+            )}
           </Field>
         </Grid>
 
         <Grid item className={classes.companylist}>
-          {props.touched.idCompany && props.errors.idCompany && (
+          {props.touched.companyId && props.errors.companyId && (
             <Alert severity="error">Please select the company</Alert>
           )}
           <FormControl variant="outlined" label="List" fullWidth>
-            <InputLabel id="company-list">Company List</InputLabel>
+            <InputLabel id="company-list" value=" ">
+              Company List
+            </InputLabel>
             <Select
               labelId="company-list-label"
               id="simple-select-outlined"
-              value={props.idCompany}
               label="Company List"
+              value={company}
+              onChange={handleChange}
             >
-              <CompaniesItem />
+              <CompaniesItem
+                companylist={props.getListCompany}
+                companydata={sendListCompany}
+              />
             </Select>
           </FormControl>
         </Grid>
@@ -180,11 +227,11 @@ function FormCreateOffice(props) {
 const FormOffice = withFormik({
   mapPropsToValues({ name, latitude, longtitude, startDate, companyId }) {
     return {
+      companyId: companyId || "",
       name: name || "",
       latitude: latitude || "",
       longtitude: longtitude || "",
       startDate: startDate || "",
-      companyId: companyId || "",
     };
   },
   validationSchema: Yup.object().shape({
@@ -198,4 +245,7 @@ const FormOffice = withFormik({
     console.log(values);
   },
 })(FormCreateOffice);
-export default graphql(getListCompany)(FormOffice);
+export default compose(
+  graphql(addOffice, { name: "addOffice" }),
+  graphql(getListCompany, { name: "getListCompany" })
+)(FormOffice);
