@@ -99,12 +99,29 @@ const addOffice = gql`
     }
   }
 `;
-
+const deleteCompany = gql`
+  mutation($companyId: ID) {
+    deleteCompany(companyId: $companyId) {
+      name
+      id
+    }
+  }
+`;
+const deleteOffice = gql`
+  mutation($officeId: ID) {
+    deleteCompany(officeId: $officeId) {
+      name
+      id
+    }
+  }
+`;
 export {
   getCompanyQuery,
   getSingleCompanyQuery,
   getOfficeQuery,
+  getListCompany,
   addCompany,
   addOffice,
-  getListCompany,
+  deleteCompany,
+  deleteOffice  
 };

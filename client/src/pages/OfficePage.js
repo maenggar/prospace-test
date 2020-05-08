@@ -9,7 +9,7 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
-import { Link as RouterLink, useParams } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { getSingleCompanyQuery } from "../queries/Queries";
 import OfficesList from "../components/OfficesList";
 import { graphql } from "react-apollo";
@@ -40,7 +40,7 @@ function OfficePage(props) {
       <div className="overview-section">
         <Container maxWidth="md">
           <Paper className={classes.paper} elevation={3}>
-            <Grid Container direction="row">
+            <Grid container direction="column">
               <Grid item>
                 <Typography variant="h5" align="left">
                   {data.company.name}
@@ -139,7 +139,6 @@ function OfficePage(props) {
 
 export default graphql(getSingleCompanyQuery, {
   options: (props) => {
-    console.log(props, "logging from getSingleCompanyQuery");
     return {
       variables: {
         id: props.match.params.id,

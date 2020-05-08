@@ -14,7 +14,8 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { graphql } from "react-apollo";
-import { getCompanyQuery } from "../queries/Queries";
+import { flowRight as compose } from "lodash";
+import { getCompanyQuery, deleteCompany } from "../queries/Queries";
 
 const useStyle = makeStyles({
   cardStyle: {
@@ -37,13 +38,24 @@ const useStyle = makeStyles({
 function CompaniesList(props) {
   // handel card hover
   let [raisedCard, setRaisedCard] = useState(false);
+
   const handleRaised = () => {
     setRaisedCard(!raisedCard);
   };
-
   const classes = useStyle();
   const displayData = () => {
-    let data = props.data;
+    console.log(props, "find mutate props");
+
+    let deleteCompanyMutation = (id) => {
+      return props.deleteCompany({
+        variables: {
+          companyId: id,
+        },
+      });
+    };
+
+    let data = props.getCompanyQuery;
+
     if (data.loading) {
       return <h3>data stil loading</h3>;
     } else {
@@ -51,36 +63,38 @@ function CompaniesList(props) {
         return (
           <div key={companie.id}>
             <Grid item xs="auto" style={{ maxWidth: "15em", marginTop: "5em" }}>
-              <Link
-                underline="none"
-                component={RouterLink}
-                to={`/officepage/${companie.id}`}
+              <Card
+                onMouseOver={() => {
+                  handleRaised();
+                }}
+                onMouseOut={() => {
+                  handleRaised();
+                }}
+                raised={raisedCard}
+                variant="elevation"
+                className={classes.cardStyle}
+                key={companie.id}
               >
-                <Card
-                  onMouseOver={() => {
-                    handleRaised();
-                  }}
-                  onMouseOut={() => {
-                    handleRaised();
-                  }}
-                  onClick={() => {
-                    console.log(companie.id, "the id number");
-                  }}
-                  raised={raisedCard}
-                  variant="elevation"
-                  className={classes.cardStyle}
-                  key={companie.id}
+                <CardHeader
+                  titleTypographyProps={{ variant: "h6", align: "left" }}
+                  title={companie.name}
+                  action={
+                    <IconButton
+                      aria-label="settings"
+                      onClick={() => {
+                        deleteCompanyMutation(companie.id);
+                      }}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  }
+                />
+                <Divider variant="middle" />
+                <Link
+                  underline="none"
+                  component={RouterLink}
+                  to={`/officepage/${companie.id}`}
                 >
-                  <CardHeader
-                    titleTypographyProps={{ variant: "h6", align: "left" }}
-                    title={companie.name}
-                    action={
-                      <IconButton aria-label="settings">
-                        <DeleteForeverIcon />
-                      </IconButton>
-                    }
-                  />
-                  <Divider variant="middle" />
                   <CardContent>
                     <Grid
                       container
@@ -116,8 +130,8 @@ function CompaniesList(props) {
                       </Grid>
                     </Grid>
                   </CardContent>
-                </Card>
-              </Link>
+                </Link>
+              </Card>
             </Grid>
           </div>
         );
@@ -153,4 +167,7 @@ function CompaniesList(props) {
     </div>
   );
 }
-export default graphql(getCompanyQuery)(CompaniesList);
+export default compose(
+  graphql(getCompanyQuery, { name: "getCompanyQuery" }),
+  graphql(deleteCompany, { name: "deleteCompany" })
+)(CompaniesList);

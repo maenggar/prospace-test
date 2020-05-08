@@ -31,6 +31,8 @@ const useStyle = makeStyles({
 });
 
 function FormCreateCompany(props) {
+  console.log(props, "from company form");
+
   const classes = useStyle();
   const addCompanyMutation = () => {
     return props.mutate({

@@ -18,7 +18,6 @@ import DatePicker from "./DatePicker";
 
 import { graphql } from "react-apollo";
 import { getListCompany } from "../queries/Queries";
-//import CompaniesItem from "./CompaniesItem";
 
 let theme = createMuiTheme();
 const useStyle = makeStyles({
